@@ -1,0 +1,35 @@
+---
+title: "ACST886_Assignment1_Q1"
+author: "Shaofei Shen"
+date: "2019/8/22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Q1
+#### Method 1 
+using the annuity formula to calculate the annual repayment as $PV=PMT*\sum_{n=1}^{30} \frac{1}{(1+i)^n}$, where PV=600000, i=3.5%, and find PMT
+```{r}
+PMT<-function(i,n){
+  pv<-(1-(1/(1+i)^n))/i
+  return(600000/pv)
+}
+PMT(0.035,30)
+```
+
+##### Method 2 
+using uniroot function, where we set the annual payment as our unknow x variable. we need to let the present value of all the cashflow equals to the loan amount 600000. However, uniroot can only find the value that make the function equals to 0. we need to makke the function value equals to 0 by reducing 600000.   
+```{r}
+PV<-function(x){
+  ##generate the annual payment vetor for 30 yrs
+  PMT<-c(rep(x,30))
+  ##generate the dicount vector for 30 yrs 
+  v<-1/(1+0.035)^(1:30)
+  PV<-sum(PMT*v)-600000
+  return(PV)
+}
+uniroot(PV,c(0,50000))
+```
